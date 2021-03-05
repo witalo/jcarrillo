@@ -1,0 +1,316 @@
+{% extends 'index.html' %}
+
+{% block title %}
+    System | Productos
+{% endblock title %}
+
+{% block body %}
+    <div class="card shadow h-100 montserrat">
+        <div class="card-header d-flex flex-row align-items-center justify-content-between p-0 pt-2 pb-2"
+             style="background: #027fde;">
+            <div class="row col-md-12 m-0 p-0">
+                <div class="col-md-2 pt-1">
+                    <button type="button" class="button text-white" onclick="showModalView('product_form')"><i
+                            class="fas fa-database"></i> <span>  Nuevo producto </span></button>
+                </div>
+                <div class="col-md-2 pt-1">
+                    <button type="button" id="custom-select-all-products" class="button text-white"><i
+                            class="fas fa-box"></i> <span>  Ver todos</span></button>
+                </div>
+                <div class="col-md-3 pt-1">
+                    <select class="custom-select form-control form-control-sm mr-sm-2 combo"
+                            id="custom-select-product-by-name">
+                        <option value="" selected disabled>Seleccione...</option>
+                        {% for n in names %}
+                            <option value="{{ n.id }}">{{ n.names }}</option>{% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-5">
+                </div>
+            </div>
+        </div>
+        <div class="card body p-0 border-0">
+            <div id="product-grid-list" class="montserrat"  style="overflow-y: scroll; height: 500px; width: auto;">
+                {#                {% include "sale/product_grid_list.html" %}#}
+            </div>
+            <div class="text-center align-self-center" style="
+                display: none;
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                background: #e9ecef;
+                opacity: 0.5;
+                width: 100%;
+                height: 46em;
+                padding-top: 21em;" id="id-loading">
+            </div>
+        </div>
+    </div>
+    <div class="modal fade small" id="modal-product-form" tabindex="-1" role="dialog" aria-labelledby="ModalHelpTitle"
+         aria-hidden="true"></div>
+    <div class="modal fade" id="modal-product-detail" tabindex="-1" role="dialog" aria-labelledby="ModalHelpTitle"
+         aria-hidden="true"></div>
+    <div class="modal fade" id="modal-initial-stock" tabindex="-1" role="dialog" aria-labelledby="ModalHelpTitle"
+         aria-hidden="true"></div>
+    <div class="modal fade" id="show-kardex" tabindex="-1" role="dialog" aria-labelledby="ModalHelpTitle"
+         aria-hidden="true"></div>
+    <style>
+        .button {
+            border-radius: 4px;
+            background-color: #b72435;
+            border: none;
+            text-align: center;
+            font-size: 14px;
+            padding: 6px;
+            width: 100%;
+            transition: all 0.5s;
+            cursor: pointer;
+            margin: 0px;
+        }
+
+        .button span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+        }
+
+        .button span:after {
+            content: '\00bb';
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: -30px;
+            transition: 0.5s;
+        }
+
+        .button:hover span {
+            padding-right: 20px;
+        }
+
+        .button:hover span:after {
+            opacity: 1;
+            right: 0;
+        }
+    </style>
+{% endblock body %}
+
+{% block extrajs %}
+    <script type="text/javascript">
+        $('.combo').select2({
+            theme: 'bootstrap4',
+            {#theme: 'classic',#}
+            {#language: "es",#}
+            placeholder: "Seleccione",
+            allowClear: true,
+            language: {
+                noResults: function () {
+                    return "No resultados";
+                },
+                searching: function () {
+                    return "Buscando..";
+                }
+            }
+        });
+
+        function showModalView(route) {
+            $.ajax({
+                url: '/sale/' + route + '/',
+                dataType: 'json',
+                type: 'GET',
+                data: {'pk': 1},
+                success: function (response) {
+                    $('#modal-product-form').html(response.form);
+                    $('#modal-product-form').modal('show');
+                },
+                fail: function (response) {
+                    toastr.error('Formulario con problemas', '¡Mensaje!');
+                }
+            });
+
+        };
+
+        $(document).on('click', '.btn-update-product', function () {
+            let id_ = $(this).attr('pk');
+            $.ajax({
+                url: '/sale/get_product_update_form/',
+                dataType: 'json',
+                type: 'GET',
+                data: {'pk_': id_},
+                success: function (response) {
+                    console.log(response);
+                    if (response.success) {
+                        $('#modal-product-form').html(response.form);
+                        $('#modal-product-form').modal('show');
+                    }
+                },
+                fail: function (response) {
+                    toastr.error('Problemas al mostrar formulario', '¡Mensaje!');
+                }
+            });
+        });
+
+        $(document).on('click', '.btn-product-presenting', function () {
+            let search = $(this).attr('pk');
+            $.ajax({
+                url: '/sale/product_presenting_operation/',
+                dataType: 'json',
+                type: 'GET',
+                data: {'pk': search},
+                success: function (response) {
+                    if (response.success) {
+                        $('#modal-product-detail').html(response.form);
+                        $('#product-presenting-detail').html(response.grid);
+                        $('#modal-product-detail').modal('show');
+                    }
+                },
+                fail: function (response) {
+                    toastr.error('Problemas al mostrar formulario', '¡Mensaje!');
+                }
+            });
+        });
+        $(document).on('click', '.btn-initial-stock', function () {
+            let product_id = $(this).attr('pk');
+            $.ajax({
+                url: '/sale/template_initial_stock/',
+                dataType: 'json',
+                type: 'GET',
+                data: {'pk': product_id},
+                success: function (response) {
+                    if (response.success) {
+                        $('#modal-initial-stock').html(response.form);
+                        $('#product-store-detail').html(response.grid);
+                        $('#modal-initial-stock').modal('show');
+                    }
+                },
+                fail: function (response) {
+                    toastr.error('Problemas al mostrar el modal', '¡Mensaje!');
+                }
+            });
+        });
+        $(document).on('click', '.btn-kardex-product', function () {
+            let _pk = $(this).attr('pk');
+            $.ajax({
+                url: '/sale/get_kardex_by_product/',
+                dataType: 'json',
+                type: 'GET',
+                data: {'pk': _pk},
+                success: function (response) {
+                    console.log(response);
+                    if (response.success) {
+                        $('#show-kardex').html(response.form);
+                        $('#show-kardex').modal('show');
+                    }
+                },
+                fail: function (response) {
+                    console.log(response);
+                }
+            });
+        });
+        // Set option selected product
+        $('#custom-select-product-by-name').change(function () {
+            let selected = $('#custom-select-product-by-name').val();
+            getProducts("name", selected);
+        });
+        $('#custom-select-all-products').click(function () {
+            getProducts("all", '');
+        });
+
+        function getProducts($product, $value) {
+            $('#product-grid-list').empty();
+            $('#id-loading').html(loader).show();
+            $.ajax({
+                    url: '/sale/get_product_by_condition/',
+                    async: true,
+                    dataType: 'json',
+                    type: 'GET',
+                    data: {
+                        'value': $value,
+                        'product': $product
+                    },
+                    contentType: 'application/json;charset=UTF-8',
+                    headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                    success: function (response, textStatus, xhr) {
+                        if (xhr.status === 200) {
+                            toastr.success(response.message, 'Mensaje');
+                            $('#product-grid-list').html(response.grid);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, xhr) {
+                        if (jqXhr.status === 500) {
+                            toastr.error(jqXhr.responseJSON.error, '¡Error de consulta!');
+                        } else {
+                            if (textStatus === 'timeout') {
+                                toastr.error('Tiempo excedido', '¡Error de consulta!');
+                            } else {
+                                console.log(" STATUS: " + xhr + " " + textStatus);
+                            }
+                        }
+                    }
+
+                }
+            );
+            $('#id-loading').hide();
+        }
+
+        $(document).on('keypress', '.barcode', function (e) {
+
+            if (e.keyCode === 13) {
+
+                e.preventDefault()
+                let _input = $(this);
+                $(this).trigger("enterKey");
+
+                let _barcode = $(this).val();
+                let _id = $(this).attr('product-detail');
+
+                if (_barcode.length === 0) {
+                    toastr.warning('Ingrese el numero de caracteres necesarios', 'Codigo');
+                    return false;
+                }
+                $.ajax({
+                    url: '/sale/set_code_presenting/',
+                    async: true,
+                    dataType: 'json',
+                    type: 'GET',
+                    data: {
+                        'barcode': _barcode,
+                        'product_detail': _id
+                    },
+                    contentType: 'application/json;charset=UTF-8',
+                    headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                    success: function (response, textStatus, xhr) {
+                        if (xhr.status === 200) {
+                            toastr.success(response.message, 'Mensaje');
+                            _input.parent('td').parent('tr').find('td.code_text span').text(_barcode);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, xhr) {
+                        if (jqXhr.status === 500) {
+                            toastr.error(jqXhr.responseJSON.error, 'Mensaje');
+                        } else {
+                            if (textStatus === 'timeout') {
+                                toastr.error('Tiempo excedido', 'Mensaje');
+                            } else {
+                                console.log(" STATUS: " + xhr + " " + textStatus);
+                            }
+                        }
+                    }
+                });
+                return false;
+            }
+        });
+        loader = '<div class="container">' +
+            '<div class="row">' +
+            '<div class="col-md-12">' +
+            '<div class="loader">' +
+            '<p><strong>Cargando productos...</strong></p>' +
+            '<div class="loader-inner"></div>' +
+            '<div class="loader-inner"></div>' +
+            '<div class="loader-inner"></div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+    </script>
+{% endblock extrajs %}

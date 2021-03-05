@@ -1,0 +1,180 @@
+{% if products %}
+    <div class="card montserrat">
+        <div class="card-body">
+            <div class="table-responsive dataTables_wrapper ">
+                <table id="product-data-grid" class="table table-sm table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                    <tr class="text-center text-white" style="background: #136ac8">
+                        <th>#</th>
+                        <th class="th-sm font-weight-normal">Nombre</th>
+                        <th class="th-sm font-weight-normal">Detalles</th>
+                        <th class="th-sm font-weight-normal">Stock en sedes</th>
+                        <th class="th-sm font-weight-normal">Unidades</th>
+                        {#                        <th class="th-sm">Foto</th>#}
+                        <!--<th class="th-sm">Imagen</th>-->
+                        <th class="th-sm">Acción</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for product in products %}
+                        <tr class="text-center">
+                            <td class="align-middle">{{ product.id }}</td>
+                            <td class="align-middle font-weight-bolder"
+                                style="font-size: 12px;">{{ product.names }}</td>
+                            <td class="align-middle">
+                                <address class="text-left" style="font-size: 11px;">
+                                    Codigo: {{ product.code }}<br>
+                                    Stock Minimo: <i>{{ product.stock_min|floatformat:2 }}</i><br>
+                                    Stock Maximo: <i>{{ product.stock_max|floatformat:2 }}</i><br>
+                                    Categoria, {{ product.category }}<br>
+                                </address>
+                            </td>
+                            <td class="p-0">
+                                {% if product.product_store_count_set > 0 %}
+                                    <table class="table table-sm  text-uppercase small" style="width: 100%;">
+                                        <thead>
+                                        <th style="width: 40%;">Sede</th>
+                                        <th style="width: 40%;">Almacen</th>
+                                        <th style="width: 20%;">Stock</th>
+                                        </thead>
+                                        <tbody>
+                                        {% for product_store in product.product_store_set %}
+                                            <tr class="{% if product_store.subsidiary_store__subsidiary__id == subsidiary.id %}text-danger font-weight-bolder{% endif %}">
+                                                <td class="align-middle text-danger">{{ product_store.subsidiary_store__subsidiary__name }}</td>
+                                                <td class="align-middle">{{ product_store.subsidiary_store__name }}</td>
+                                                <td class="align-middle text-danger">{{ product_store.stock|floatformat:2 }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% endif %}
+
+                            </td>
+                            <td class="p-0">
+                                {% if product.product_presenting_count_set > 0 %}
+                                    <table class="table table-sm  text-uppercase small" style="width: 100%;">
+                                        <thead>
+                                        <th style="width: 10%;">Abrev.</th>
+                                        <th style="width: 20%;">Unidad</th>
+                                        <th style="width: 10%;">P.U</th>
+                                        <th style="width: 15%;">Cantidad</th>
+                                        <th style="width: 20%;">Codigo</th>
+                                        <th style="width: 25%;">Mod. Codigo</th>
+                                        </thead>
+                                        <tbody>
+                                        {% for presenting in product.product_presenting_set %}
+                                            <tr class="align-self-center">
+                                                <td class="text-primary font-weight-bolder align-middle">{{ presenting.unit__name }}</td>
+                                                <td class="align-middle">{{ presenting.unit__description }}</td>
+                                                <td class="align-middle">{{ presenting.price_sale|floatformat:2 }}</td>
+                                                <td class="align-middle">{{ presenting.quantity_minimum|floatformat:2 }}</td>
+                                                <td class="align-middle code_text"><i
+                                                        class="fas fa-barcode fa-2x"></i><br><span>{{ presenting.code|default_if_none:'***' }}</span>
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <input type="text"
+                                                           value="{{ presenting.code|default_if_none:'' }}"
+                                                           product-detail="{{ presenting.id }}"
+                                                           class="form-control form-control-sm m-0 barcode">
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% endif %}
+                            </td>
+                            {#                            <td>#}
+                            {#                                <img class="img-thumbnail" src="{{ product.photo.url }}" id="#img-photo-product"#}
+                            {#                                     width="80px"#}
+                            {#                                     height="60px">#}
+                            {#                            </td>#}
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button"
+                                            class="btn btn-sm  dropdown-toggle text-white font-weight-normal"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                            style="background-color: #b32424;">
+                                        Opciónes
+                                    </button>
+                                    <div class="dropdown-menu border-dark text-primary font-italic"
+                                         aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item line-link btn-update-product"
+                                           pk="{{ product.id }}"><i class="fas fa-user-edit pr-0"></i>
+                                            Modificar
+                                        </a>
+                                        <div class="dropdown-divider m-1"></div>
+                                        <a class="dropdown-item line-link btn-product-presenting"
+                                           pk="{{ product.id }}"><i class="fas fa-compact-disc pr-0"></i>
+                                            Precios
+                                        </a>
+                                        <div class="dropdown-divider m-1"></div>
+                                        <a class="dropdown-item line-link btn-initial-stock"
+                                           pk="{{ product.id }}"><i class="fas fa-home pr-0"></i>
+                                            Inventario inicial
+                                        </a>
+                                        <div class="dropdown-divider m-1"></div>
+                                        <a class="dropdown-item line-link btn-kardex-product"
+                                           pk="{{ product.id }}"><i class="fas fa-home pr-0"></i>
+                                            Kardex
+                                        </a>
+                                    </div>
+                                </div>
+
+
+                            </td>
+
+                        </tr>
+                    {% endfor %}
+
+
+                    </tbody>
+                    <tfoot>
+                    <tr class="text-center">
+                        <th>#</th>
+                        <th class="th-sm font-weight-normal">Nombre</th>
+                        <th class="th-sm font-weight-normal">Detalles</th>
+                        <th class="th-sm font-weight-normal">Stock en sedes</th>
+                        <th class="th-sm font-weight-normal">Unidades</th>
+                        {#                        <th class="th-sm">Foto/th>#}
+                        <!--<th class="th-sm">Imagen</th>-->
+                        <th class="th-sm font-weight-normal">Acción</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <!-- Card -->
+    </div>
+    <style type="text/css">
+        #img-photo-product {
+            border-radius: 50%;
+            vertical-align: middle;
+        }
+
+        a.dropdown-item.line-link {
+            font-size: 12px;
+            background-color: #f3f1f1;
+        }
+
+        a.dropdown-item.line-link:hover {
+            background-color: #cbcbcb;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+    </style>
+{% else %}
+    <h1>No existen productos registrados</h1>
+{% endif %}
+<script type="text/javascript">
+    $('#product-data-grid').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+        },
+        fixedHeader: {
+            header: true,
+            {#footer: true#}
+        }
+    });
+</script>
