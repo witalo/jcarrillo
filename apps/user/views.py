@@ -9,7 +9,7 @@ from django.views.generic.edit import FormView
 from django.contrib.auth import login, logout
 from django.http import HttpResponseRedirect, JsonResponse
 from .forms import FormLogin
-from ..hrm.models import Employee
+from ..certification.models import Person
 
 
 class Login(FormView):
@@ -40,7 +40,7 @@ def logout_user(request):
 def create_user(request):
     if request.method == 'POST':
         _id = int(request.POST.get('pk'))
-        employee_obj = Employee.objects.get(id=_id)
+        employee_obj = Person.objects.get(id=_id)
         _username = request.POST.get('username')
         _password = request.POST.get('password')
         _user_email = _username + '@system.com'

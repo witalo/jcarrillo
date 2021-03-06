@@ -84,12 +84,12 @@
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h5 class="collapse-header">Entradas - Salidas</h5>
-                    <a class="collapse-item" href="{% url 'sale:order_sales' %}"><i
-                            class="fas fa-cart-plus fa-x text-gray-300"></i> Ventas</a>
-                    <a class="collapse-item" href="{% url 'purchase:order_purchase' %}"><i
-                            class="fas fa-cart-plus fa-x text-gray-300"></i> Compras</a>
-                    <a class="collapse-item" href="{% url 'sale:order_sales_list' %}"><i
-                            class="fas fa-cart-plus fa-x text-gray-300"></i> Ventas realizadas</a>
+{#                    <a class="collapse-item" href="{% url 'sale:order_sales' %}"><i#}
+{#                            class="fas fa-cart-plus fa-x text-gray-300"></i> Ventas</a>#}
+{#                    <a class="collapse-item" href="{% url 'purchase:order_purchase' %}"><i#}
+{#                            class="fas fa-cart-plus fa-x text-gray-300"></i> Compras</a>#}
+{#                    <a class="collapse-item" href="{% url 'sale:order_sales_list' %}"><i#}
+{#                            class="fas fa-cart-plus fa-x text-gray-300"></i> Ventas realizadas</a>#}
                     {#                    <a class="collapse-item" href="{% url 'sale:get_client_list' %}"><i class="fas fa-cart-plus fa-x text-gray-300"></i> Clientes</a>#}
                 </div>
             </div>
@@ -105,9 +105,9 @@
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Talento Humano</h6>
-                    <a class="collapse-item" href="{% url 'hrm:employee_list' %}">Trabajadores</a>
-                    <a class="collapse-item" href="{% url 'purchase:provider_list' %}">Proveedores</a>
-                    <a class="collapse-item" href="{% url 'sale:client_list' %}">Clientes</a>
+                    <a class="collapse-item" href="{% url 'certification:employee_list' %}">Trabajadores</a>
+{#                    <a class="collapse-item" href="{% url 'purchase:provider_list' %}">Proveedores</a>#}
+{#                    <a class="collapse-item" href="{% url 'sale:client_list' %}">Clientes</a>#}
                     {#                    <a class="collapse-item" href="utilities-other.html">Other</a>#}
                 </div>
             </div>
@@ -131,7 +131,7 @@
             <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Almacen</h6>
-                    <a class="collapse-item" href="{% url 'sale:product_list' %}">Productos</a>
+{#                    <a class="collapse-item" href="{% url 'sale:product_list' %}">Productos</a>#}
                     {#                    <a class="collapse-item" href="register.html">Kardex</a>#}
                     {#                    <a class="collapse-item" href="forgot-password.html">Reportes</a>#}
                     {#                    <div class="collapse-divider"></div>#}
@@ -144,7 +144,7 @@
 
         <!-- Nav Item - Charts -->
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'hrm:report' %}">
+            <a class="nav-link" href="{% url 'certification:report' %}">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>Charts</span></a>
         </li>
@@ -158,9 +158,7 @@
             <div id="collapseCash" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Finanza</h6>
-                    <!--<a class="collapse-item" href="{% url 'sale:product_list' %}">Aperturar caja</a>
-                    <a class="collapse-item" href="{% url 'sale:product_list' %}">Cerrar caja</a>-->
-                    <a class="collapse-item" href="{% url 'sale:product_list' %}">Cuentas caja</a>
+{#                    <a class="collapse-item" href="{% url 'sale:product_list' %}">Cuentas caja</a>#}
                 </div>
             </div>
         </li>
@@ -350,8 +348,8 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <div class="card-header rounded m-0 p-1 bg-gradient-light">
-                                {#                                <span class="mr-1 d-none d-lg-inline text-white  small"> {{ user.worker_set.last.employee.full_name }} </span>#}
-                                {#                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"> {{ user.worker_set.last.employee.full_name }} </span>#}
+                                {#                                <span class="mr-1 d-none d-lg-inline text-white  small"> {{ user.worker_set.last.person.full_name }} </span>#}
+                                {#                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"> {{ user.worker_set.last.person.full_name }} </span>#}
 
                                 <img class="img-profile rounded-circle"
                                         {#                                 src="https://source.unsplash.com/QAB-WJcbgJk/60x60">#}
