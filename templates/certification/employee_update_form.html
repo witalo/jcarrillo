@@ -1,112 +1,99 @@
 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 
-    <div class="modal-content">
-
-        <div class="modal-header" style="background-color: rgba(7, 134, 193, 1.0);">
-            <h5 class="modal-title  text-white" style="font-size: 13px;">Formulario de actualizacion de información</h5>
+    <div class="modal-content montserrat">
+        <div class="modal-header" style="background-color: rgb(167,31,31);">
+            <h5 class="modal-title  text-white" style="font-size: 14px;">Formulario de actualizacion</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
 
-        <form id="form-employee-update" class="embed-responsive was-validated" enctype="multipart/form-data" style="font-size: 13px;" action="{% url 'certification:update_employee' %}" method="POST">
+        <form id="form-person-update" class="embed-responsive p-1" action="{% url 'certification:update_person' %}"
+              method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="modal-body">
-                <div class="card border-warning">
-                    <div class="card-header" style="background-color: rgba(214, 170, 9, 1.0);">
-                        <h6 class="card-title text-center text-white mb-0" style="font-size: 13px;">Información del trabajador</h6>
+                <div class="card border-danger">
+                    <div class="card-header" style="background-color: rgb(167,31,31);">
+                        <h6 class="card-title text-center text-white mb-0" style="font-size: 14px;">Informacion
+                            personal</h6>
                     </div>
                     <div class="card-body table-responsive">
-                        <table class="table table-sm" style="width: 100%">
+                        <table class="table table-sm" style="width: 100%;">
+                            <tbody>
                             <tr>
-                                <td class="align-middle" style="width: 20%">Documento</td>
-                                <td style="width: 30%">
+                                <td class="align-middle">Documento</td>
+                                <td>
                                     <input type="hidden"
                                            class="form-control" name="pk" id="id_pk"
-                                           value="{{ employee_obj.id }}"  required>
+                                           value="{{ person_obj.id }}" required>
                                     <input type="text"
                                            class="form-control" name="document" id="id_document"
-                                           placeholder="Documento" style="font-size: 13px;" value="{{ employee_obj.document_number }}"  required>
+                                           placeholder="" style="font-size: 12px;" value="{{ person_obj.document }}"
+                                           required>
                                 </td>
-                                <td class="align-middle text-center" rowspan="3" colspan="5" style="width: 50%">
+                                <td class="align-middle text-center" rowspan="3" colspan="4">
                                     <label class="new_btn border rounded-lg">
-                                        <img id="blah" class="img-thumbnail" width="150px" height="140px"
-                                            src="{% if employee_obj %}{{ employee_obj.photo.url }}{% else %}http://placehold.it/120x120{% endif %}">
+                                        <img id="blah" class="img-thumbnail" width="150px" height="120px"
+                                             src="
+
+
+                                                     {% if person_obj %}{{ person_obj.photo.url }}{% else %}http://placehold.it/120x120{% endif %}">
                                     </label>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Nombres</td>
+                                <td class="align-middle">Nombres</td>
                                 <td>
                                     <input type="text"
                                            class="form-control" name="names" id="id_names"
-                                           placeholder="Nombres" style="font-size: 13px;" value="{{ employee_obj.names }}" required>
+                                           placeholder="" style="font-size: 12px;" value="{{ person_obj.names }}"
+                                           required>
                                 </td>
+                                <td colspan="4"></td>
                             </tr>
                             <tr>
-                                <td>Apellido paterno</td>
+                                <td class="align-middle">Apellido paterno</td>
                                 <td>
                                     <input type="text" class="form-control" id="id_paternal"
                                            name="paternal"
-                                           placeholder="Paterno" style="font-size: 13px;" value="{{ employee_obj.paternal_last_name }}" required>
+                                           placeholder="" style="font-size: 12px;"
+                                           value="{{ person_obj.paternal_last_name }}" required>
                                 </td>
+                                <td colspan="4"></td>
                             </tr>
                             <tr>
-                                <td>Apellido materno</td>
+                                <td class="align-middle">Apellido materno</td>
                                 <td>
                                     <input type="text" class="form-control" id="id_maternal"
                                            name="maternal"
-                                           placeholder="Materno" style="font-size: 13px;" value="{{ employee_obj.maternal_last_name }}" required>
+                                           placeholder="" style="font-size: 12px;"
+                                           value="{{ person_obj.maternal_last_name }}" required>
                                 </td>
-                                 <td colspan="5" class="text-center">
-                                    <div class="custom-file" style="width: 340px;">
+                                <td colspan="4" class="text-center">
+                                    <div class="custom-file">
                                         <input type="file" class="custom-file-input" id="customFile" name="customFile"
                                                onchange="readURL(this);">
-                                        <label class="custom-file-label text-left" for="customFile" name="customFile">{% if employee_obj %}{{ employee_obj.photo.url }}{% else %}Seleccione archivo{% endif %}</label>
+                                        <label class="custom-file-label text-center" for="customFile" name="customFile">
+                                            {% if person_obj %}{{ person_obj.photo.url }}{% else %}Seleccione
+                                                imagen{% endif %}</label>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Fecha nacimiento</td>
+                                <td class="align-middle">Fecha nacimiento</td>
                                 <td>
                                     <input type="date" class="form-control" id="id_birth_date"
-                                           name="birth_date" style="font-size: 13px;"
-                                           value="{{ employee_obj.birth_date|date:"Y-m-d" }}" required>
+                                           name="birth_date"
+                                           value="{{ person_obj.birth_date|date:'Y-m-d' }}" required>
                                 </td>
-                            <td class="align-middle" style="width: 10px">Cargo</td>
-                                <td style="width: 170px">
-                                    <select class="form-control" id="id_occupation" name="occupation" style="font-size: 13px;"
-                                            required>
-                                        <option disabled selected value="">Seleccione</option>
-                                        {% for item in type_occupation %}
-                                            {% if employee_obj.occupation == item.0 %}
-                                                 <option selected value="{{ item.0 }}">{{ item.1 }}</option>
-                                            {% else %}
-                                                 <option value="{{ item.0 }}">{{ item.1 }}</option>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </select>
-                                </td>
-                                <td class="align-middle" style="width: 10px;">Genero</td>
-                                <td style="width: 120px;">
-                                    <select class="form-control" id="id_gender" name="gender" style="font-size: 13px;" required>
-                                        <option disabled value="1">Seleccione</option>
-                                        {% for item in type_gender %}
-                                            {% if employee_obj.gender == item.0 %}
-                                                 <option selected value="{{ item.0 }}">{{ item.1 }}</option>
-                                            {% else %}
-                                                 <option value="{{ item.0 }}">{{ item.1 }}</option>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </select>
-                                </td>
-                                <td class="align-middle text-center">
+                                <td class="align-middle text-center" colspan="4">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input"
-                                               id="customCheck" name="checkbox"  {% if employee_obj.is_state %} checked="{{ employee_obj.is_state }}" {% endif %}>
+                                               id="customCheck" name="checkbox"  {% if person_obj.is_state %}
+                                               checked="{{ person_obj.is_state }}" {% endif %}>
                                         <label class="custom-control-label"
-                                               for="customCheck" style="font-size: 13px;">Estado</label>
+                                               for="customCheck">Estado</label>
                                     </div>
                                 </td>
                             </tr>
@@ -115,39 +102,80 @@
                                 <td>
                                     <input type="text"
                                            class="form-control" name="telephone" id="id_telephone"
-                                           placeholder="Telefono" style="font-size: 13px;" value="{{ employee_obj.telephone_number }}" required>
+                                           placeholder="" style="font-size: 12px;" value="{{ person_obj.telephone }}"
+                                           required>
                                 </td>
-                                <td class="align-middle" style="width: 15%">Correo</td>
-                                <td class="align-middle" style="width: 50%" colspan="4">
+                                <td class="align-middle text-center" colspan="2">Correo</td>
+                                <td class="align-middle" colspan="2">
                                     <input type="text"
                                            class="form-control" name="email" id="id_email"
-                                           placeholder="correo@email.com" style="font-size: 13px;" value="{{ employee_obj.email }}" required>
+                                           placeholder="correo@email.com" style="font-size: 12px;"
+                                           value="{{ person_obj.email }}" required>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="align-middle">Direccion</td>
-                                <td colspan="7">
+                                <td colspan="5">
                                     <input type="text"
                                            class="form-control" name="address" id="id_address"
-                                           placeholder="Direccion de domicilio" style="font-size: 13px;" value="{{ employee_obj.address }}" required>
+                                           placeholder="" style="font-size: 12px;" value="{{ person_obj.address }}"
+                                           required>
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="align-middle">Ocupaciòn</td>
+                                <td colspan="2">
+                                    <select class="form-control" id="id_occupation" name="occupation"
+                                            style="font-size: 13px;"
+                                            required>
+                                        <option disabled selected value="">Seleccione</option>
+                                        {% for item in type %}
+                                            {% if person_obj.type == item.0 %}
+                                                <option selected value="{{ item.0 }}">{{ item.1 }}</option>
+                                            {% else %}
+                                                <option value="{{ item.0 }}">{{ item.1 }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td class="align-middle text-center">Empresa</td>
+                                <td colspan="2">
+                                    <select class="form-control" id="id_business" name="business"
+                                            style="font-size: 13px;"
+                                            required>
+                                        <option disabled selected value="0">Seleccione</option>
+                                        {% for b in business_set %}
+                                            {% if person_obj.business.id == b.id %}
+                                                <option selected value="{{ b.id }}">{{ b.business_name }}</option>
+                                            {% else %}
+                                                <option value="{{ b.id }}">{{ b.business_name }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
             </div><!-- modal-body -->
             <div class="modal-footer p-1">
-                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cerrar</button> &nbsp;
-                <button id="update-employee" type="submit" class="btn btn-sm text-white" style="background-color: rgba(214, 170, 9, 1.0);">Actualizar</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal"><i
+                        class="fa fa-window-close"></i> Cerrar
+                </button> &nbsp;
+                <button id="save-employee" type="submit" class="btn btn-sm btn-warning"><i
+                        class="fas fa-house-user"></i> Actualizar
+                </button>
             </div>
         </form>
     </div>
 </div>
 <script type="text/javascript">
-    function filename(path){
-            path = path.substring(path.lastIndexOf("/")+ 1);
-            return (path.match(/[^.]+(\.[^?#]+)?/) || [])[0];
-        }
+    function filename(path) {
+        path = path.substring(path.lastIndexOf("/") + 1);
+        return (path.match(/[^.]+(\.[^?#]+)?/) || [])[0];
+    }
+
     $('#form-person-update').submit(function (event) {
         event.preventDefault();
         let data = new FormData($('#form-person-update').get(0));
@@ -177,23 +205,24 @@
         let fileName = $(this).val().split("\\").pop();
         $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
+
     function readURL(input) {
         let url = input.value;
         let ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
-        if (input.files && input.files[0]&& (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
+        if (input.files && input.files[0] && (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
             let reader = new FileReader();
 
             reader.onload = function (e) {
                 $('#blah').attr('src', e.target.result);
             }
             reader.readAsDataURL(input.files[0]);
+        } else {
+            $('#blah').attr('src', 'http://placehold.it/120x120');
         }
-        else{
-             $('#blah').attr('src', 'http://placehold.it/120x120');
-          }
-        }
-        $('.new_btn').bind("click" , function () {
+    }
+
+    $('.new_btn').bind("click", function () {
         // $('#id_photo').attr("onchange","readURL(this);");
         $('#customFile').trigger('click');
-        });
+    });
 </script>

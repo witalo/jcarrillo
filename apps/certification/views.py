@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.template import loader
-from apps.certification.models import Person, Business
+from apps.certification.models import Person, Business, Course
 
 
 class Home(TemplateView):
@@ -24,7 +24,7 @@ def get_employee_list(request):
         employee_set = Person.objects.all()
         my_date = datetime.now()
         date_now = my_date.strftime("%Y-%m")
-        return render(request, 'hrm/employee_list.html', {
+        return render(request, 'certification/employee_list.html', {
             'date_now': date_now,
             'employee_set': employee_set,
         })
@@ -35,56 +35,64 @@ def get_employee_form(request):
     if request.method == 'GET':
         my_date = datetime.now()
         date_now = my_date.strftime("%Y-%m-%d")
-
-        t = loader.get_template('hrm/employee_form.html')
+        business_set = Business.objects.all()
+        t = loader.get_template('certification/employee_form.html')
         c = ({
             'date_now': date_now,
             'type': Person._meta.get_field('type').choices,
+            'business_set': business_set,
         })
         return JsonResponse({
             'form': t.render(c, request),
         })
 
+
 #
 # # registrar empleado
-# @csrf_exempt
-# def save_employee(request):
-#     if request.method == 'POST':
-#         _document = request.POST.get('document', '')
-#         _birth_date = request.POST.get('birth_date', '')
-#         _paternal_last_name = request.POST.get('paternal', '')
-#         _maternal_last_name = request.POST.get('maternal', '')
-#         _names = request.POST.get('names', '')
-#         _gender_id = request.POST.get('gender', '')
-#         _occupation_id = request.POST.get('occupation', '')
-#         _telephone_number = request.POST.get('telephone', '')
-#         _email = request.POST.get('email', '')
-#         _address = request.POST.get('address', '')
-#         _state = bool(request.POST.get('checkbox', ''))
-#         try:
-#             _photo = request.FILES['customFile']
-#         except Exception as e:
-#             _photo = 'person/employee0.jpg'
-#
-#         employee_obj = Person(
-#             document_number=_document,
-#             birth_date=_birth_date,
-#             paternal_last_name=_paternal_last_name,
-#             maternal_last_name=_maternal_last_name,
-#             names=_names,
-#             gender=_gender_id,
-#             telephone_number=_telephone_number,
-#             email=_email,
-#             address=_address,
-#             occupation=_occupation_id,
-#             is_state=_state,
-#             photo=_photo,
-#         )
-#         employee_obj.save()
-#         return JsonResponse({
-#             'success': True,
-#         }, status=HTTPStatus.OK)
-#
+@csrf_exempt
+def save_person(request):
+    if request.method == 'POST':
+        user_id = request.user.id
+        user_obj = User.objects.get(id=int(user_id))
+        _document = request.POST.get('document', '')
+        _paternal_last_name = request.POST.get('paternal', '')
+        _maternal_last_name = request.POST.get('maternal', '')
+        _names = request.POST.get('names', '')
+        _birth_date = request.POST.get('birth_date', '')
+        _occupation = request.POST.get('occupation', '')
+        _telephone = request.POST.get('telephone', '')
+        _email = request.POST.get('email', '')
+        _address = request.POST.get('address', '')
+        _state = bool(request.POST.get('checkbox', ''))
+        _business_id = request.POST.get('business', '')
+        business_obj = Business.objects.get(id=int(_business_id))
+        try:
+            _photo = request.FILES['customFile']
+        except Exception as e:
+            _photo = 'person/employee0.jpg'
+
+        person_obj = Person(
+            document=_document,
+            paternal_last_name=_paternal_last_name,
+            maternal_last_name=_maternal_last_name,
+            names=_names,
+            birth_date=_birth_date,
+            telephone=_telephone,
+            email=_email,
+            address=_address,
+            type=_occupation,
+            is_state=_state,
+            photo=_photo,
+            business=business_obj,
+            user=user_obj,
+        )
+        person_obj.save()
+        return JsonResponse({
+            'message': True,
+            'resp': 'Se registro exitosamente',
+        }, status=HTTPStatus.OK)
+
+
 #
 # # renderizar datos del empleado
 # def get_employee_by_id(request):
@@ -101,7 +109,7 @@ def get_employee_form(request):
 #             'success': True,
 #             'form': t.render(c, request),
 #         })
-#
+
 #
 # # actualizar sucursal del empleado
 # @csrf_exempt
@@ -116,8 +124,8 @@ def get_employee_form(request):
 #         return JsonResponse({
 #             'success': True,
 #         }, status=HTTPStatus.OK)
-#
-#
+
+
 # # renderizar datos para la creacion de trabajo-usuario
 # def get_create_user(request):
 #     if request.method == 'GET':
@@ -155,64 +163,79 @@ def get_employee_form(request):
 #         })
 #
 #
-# # renderizar datos para la actualizacion de trabajo-usuario
-# def get_employee_update_form(request):
-#     if request.method == 'GET':
-#         pk = int(request.GET.get('pk', ''))
-#         employee_obj = Employee.objects.get(id=pk)
-#         t = loader.get_template('hrm/employee_update_form.html')
-#         c = ({
-#             'employee_obj': employee_obj,
-#             'type_gender': Employee._meta.get_field('gender').choices,
-#             'type_occupation': Employee._meta.get_field('occupation').choices,
-#         })
-#         return JsonResponse({
-#             'success': True,
-#             'form': t.render(c, request),
-#         })
-#
-#
-# # registrar empleado
-# @csrf_exempt
-# def update_employee(request):
-#     if request.method == 'POST':
-#         _id = int(request.POST.get('pk', ''))
-#         employee_obj = Employee.objects.get(id=_id)
-#         _document = request.POST.get('document', '')
-#         _birth_date = request.POST.get('birth_date', '')
-#         _paternal_last_name = request.POST.get('paternal', '')
-#         _maternal_last_name = request.POST.get('maternal', '')
-#         _names = request.POST.get('names', '')
-#         _gender_id = request.POST.get('gender', '')
-#         _occupation_id = request.POST.get('occupation', '')
-#         _telephone_number = request.POST.get('telephone', '')
-#         _email = request.POST.get('email', '')
-#         _address = request.POST.get('address', '')
-#         _photo = request.FILES.get('customFile', False)
-#         _state = bool(request.POST.get('checkbox', ''))
-#
-#         employee_obj.document_number = _document
-#         employee_obj.birth_date = _birth_date
-#         employee_obj.paternal_last_name = _paternal_last_name
-#         employee_obj.maternal_last_name = _maternal_last_name
-#         employee_obj.names = _names
-#         employee_obj.gender = _gender_id
-#         employee_obj.occupation = _occupation_id
-#         employee_obj.telephone_number = _telephone_number
-#         employee_obj.email = _email
-#         employee_obj.address = _address
-#         if _photo is not False:
-#             employee_obj.photo = _photo
-#         employee_obj.is_state = _state
-#         employee_obj.save()
-#         return JsonResponse({
-#             'success': True,
-#         }, status=HTTPStatus.OK)
-#
-#
-# # retorna la sucursal
-# def get_subsidiary_by_user(user_obj):
-#     employee_obj = Employee.objects.get(user=user_obj)
-#     if employee_obj.subsidiary:
-#         subsidiary = employee_obj.subsidiary
-#     return subsidiary
+# renderizar datos para la actualizacion de trabajo-usuario
+def get_employee_update_form(request):
+    if request.method == 'GET':
+        pk = int(request.GET.get('pk', ''))
+        person_obj = Person.objects.get(id=pk)
+        business_set = Business.objects.all()
+        t = loader.get_template('certification/employee_update_form.html')
+        c = ({
+            'person_obj': person_obj,
+            'type': Person._meta.get_field('type').choices,
+            'business_set': business_set,
+        })
+        return JsonResponse({
+            'success': True,
+            'form': t.render(c, request),
+        })
+
+
+# Actualizacion persona
+@csrf_exempt
+def update_person(request):
+    if request.method == 'POST':
+        _id = int(request.POST.get('pk', ''))
+        person_obj = Person.objects.get(id=_id)
+        _document = request.POST.get('document', '')
+        _paternal_last_name = request.POST.get('paternal', '')
+        _maternal_last_name = request.POST.get('maternal', '')
+        _names = request.POST.get('names', '')
+        _birth_date = request.POST.get('birth_date', '')
+        _occupation = request.POST.get('occupation', '')
+        _telephone = request.POST.get('telephone', '')
+        _email = request.POST.get('email', '')
+        _address = request.POST.get('address', '')
+        _business_id = request.POST.get('business', '')
+        business_obj = Business.objects.get(id=int(_business_id))
+        _photo = request.FILES.get('customFile', False)
+        _state = bool(request.POST.get('checkbox', ''))
+
+        person_obj.document = _document
+        person_obj.birth_date = _birth_date
+        person_obj.paternal_last_name = _paternal_last_name
+        person_obj.maternal_last_name = _maternal_last_name
+        person_obj.names = _names
+        person_obj.type = _occupation
+        person_obj.telephone = _telephone
+        person_obj.email = _email
+        person_obj.address = _address
+        person_obj.business = business_obj
+        if _photo is not False:
+            person_obj.photo = _photo
+        person_obj.is_state = _state
+        person_obj.save()
+        return JsonResponse({
+            'success': True,
+        }, status=HTTPStatus.OK)
+
+
+# lista de cursos
+def get_course_list(request):
+    if request.method == 'GET':
+        course_set = Course.objects.all()
+        return render(request, 'certification/course_list.html', {
+            'course_set': course_set,
+        })
+
+
+# abrir el formulario de registro
+def get_course_form(request):
+    if request.method == 'GET':
+        t = loader.get_template('certification/register_course_form.html')
+        c = ({
+            'date_now': '-',
+        })
+        return JsonResponse({
+            'form': t.render(c, request),
+        })

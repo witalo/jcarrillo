@@ -54,8 +54,10 @@ class Business(models.Model):
 
 class Course(models.Model):
     id = models.AutoField(primary_key=True)
+    code = models.CharField('Codigo', max_length=45, null=True, blank=True)
     name = models.CharField('Razón social', max_length=45, null=True, blank=True)
     description = models.CharField(max_length=200, null=True, blank=True)
+    create_at = models.DateTimeField(auto_now=True)
     is_state = models.BooleanField('Estado', default=False)
 
     def __str__(self):

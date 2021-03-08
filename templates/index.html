@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="{% static 'css/jquery.mCustomScrollbar.css' %}">
     {#    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">#}
     <link rel="stylesheet" href="{% static 'css/fixe.header_data_tables.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/switch.css' %}">
 </head>
 
 <body id="page-top" class="roboto-medium">
@@ -45,7 +46,7 @@
 
     <!-- Sidebar -->
     <ul class="navbar-nav sidebar sidebar-dark accordion toggled" id="accordionSidebar"
-        style="background-color: rgba(7, 134, 193, 1.0);">
+        style="background-color: rgb(157,29,29);">
 
         <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center">
@@ -53,7 +54,7 @@
             <div class="text-center align-middle d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
-            <div class="sidebar-brand-text mx-3 mb-3 text-white">Sistema
+            <div class="sidebar-brand-text mx-3 mb-3 text-white">JCARRILLO
                 <!--<sup>2</sup> -->
             </div>
         </a>
@@ -71,25 +72,25 @@
 
         <!-- Heading -->
         <div class="sidebar-heading">
-            Operaciones
+            Administracion
         </div>
 
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-fw fa-business-time"></i>
-                <span>Operaciones</span>
+                <i class="fas fa-house-user"></i>
+                <span>Personal</span>
             </a>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <h5 class="collapse-header">Entradas - Salidas</h5>
-{#                    <a class="collapse-item" href="{% url 'sale:order_sales' %}"><i#}
-{#                            class="fas fa-cart-plus fa-x text-gray-300"></i> Ventas</a>#}
-{#                    <a class="collapse-item" href="{% url 'purchase:order_purchase' %}"><i#}
-{#                            class="fas fa-cart-plus fa-x text-gray-300"></i> Compras</a>#}
-{#                    <a class="collapse-item" href="{% url 'sale:order_sales_list' %}"><i#}
-{#                            class="fas fa-cart-plus fa-x text-gray-300"></i> Ventas realizadas</a>#}
+                    <h5 class="collapse-header">Certificado - Digital</h5>
+                    <a class="collapse-item" href="{% url 'certification:employee_list' %}"><i
+                            class="fas fa-house-user"></i> Trabajador</a>
+                    {#                    <a class="collapse-item" href="{% url 'purchase:order_purchase' %}"><i#}
+                    {#                            class="fas fa-cart-plus fa-x text-gray-300"></i> Compras</a>#}
+                    {#                    <a class="collapse-item" href="{% url 'sale:order_sales_list' %}"><i#}
+                    {#                            class="fas fa-cart-plus fa-x text-gray-300"></i> Ventas realizadas</a>#}
                     {#                    <a class="collapse-item" href="{% url 'sale:get_client_list' %}"><i class="fas fa-cart-plus fa-x text-gray-300"></i> Clientes</a>#}
                 </div>
             </div>
@@ -98,16 +99,17 @@
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-fw fa-wrench"></i>
-                <span>Administración</span>
+                <i class="fas fa-book"></i>
+                <span>Cursos</span>
             </a>
             <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Talento Humano</h6>
-                    <a class="collapse-item" href="{% url 'certification:employee_list' %}">Trabajadores</a>
-{#                    <a class="collapse-item" href="{% url 'purchase:provider_list' %}">Proveedores</a>#}
-{#                    <a class="collapse-item" href="{% url 'sale:client_list' %}">Clientes</a>#}
+                    <h6 class="collapse-header">Administracion</h6>
+                    <a class="collapse-item" href="{% url 'certification:course_list' %}"><i class="fas fa-book"></i>
+                        Cursos</a>
+                    {#                    <a class="collapse-item" href="{% url 'purchase:provider_list' %}">Proveedores</a>#}
+                    {#                    <a class="collapse-item" href="{% url 'sale:client_list' %}">Clientes</a>#}
                     {#                    <a class="collapse-item" href="utilities-other.html">Other</a>#}
                 </div>
             </div>
@@ -118,7 +120,7 @@
 
         <!-- Heading -->
         <div class="sidebar-heading">
-            Productos
+            Programacion
         </div>
 
         <!-- Nav Item - Pages Collapse Menu -->
@@ -126,43 +128,15 @@
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                aria-expanded="true" aria-controls="collapsePages">
                 <i class="fas fa-fw fa-folder"></i>
-                <span>Almacenes</span>
+                <span>Programaciones</span>
             </a>
             <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Almacen</h6>
-{#                    <a class="collapse-item" href="{% url 'sale:product_list' %}">Productos</a>#}
-                    {#                    <a class="collapse-item" href="register.html">Kardex</a>#}
-                    {#                    <a class="collapse-item" href="forgot-password.html">Reportes</a>#}
-                    {#                    <div class="collapse-divider"></div>#}
-                    {#                    <h6 class="collapse-header">Otros registros</h6>#}
-                    {#                    <a class="collapse-item" href="404.html">Reporte</a>#}
-                    {#                    <a class="collapse-item" href="blank.html">Cotizaciones</a>#}
+                    <h6 class="collapse-header">Programacion</h6>
+                    <a class="collapse-item" href="#"><i class="fab fa-accusoft"></i> Programacion</a>
                 </div>
             </div>
         </li>
-
-        <!-- Nav Item - Charts -->
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'certification:report' %}">
-                <i class="fas fa-fw fa-chart-area"></i>
-                <span>Charts</span></a>
-        </li>
-        <!-- Nav Item - Tables -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCash"
-               aria-expanded="true" aria-controls="collapseCash">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Finanzas</span>
-            </a>
-            <div id="collapseCash" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Finanza</h6>
-{#                    <a class="collapse-item" href="{% url 'sale:product_list' %}">Cuentas caja</a>#}
-                </div>
-            </div>
-        </li>
-        <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
     </ul>
     <!-- End of Sidebar -->
@@ -178,14 +152,25 @@
                 </button>
                 <!-- Topbar Search -->
                 <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-0 my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-1 small" placeholder="Buscar..."
-                               aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
-                        </div>
+                    {#                    <div class="input-group">#}
+                    {#                        <input type="text" class="form-control bg-light border-1 small" placeholder="Buscar..."#}
+                    {#                               aria-label="Search" aria-describedby="basic-addon2">#}
+                    {#                        <div class="input-group-append">#}
+                    {#                            <button class="btn btn-primary" type="button">#}
+                    {#                                <i class="fas fa-search fa-sm"></i>#}
+                    {#                            </button>#}
+                    {#                        </div>#}
+                    {#                    </div>#}
+{#                    <label class="switch switch-default switch-pill mr-3">#}
+{#                        <input type="checkbox" class="switch-input" id="customSwitch1">#}
+{#                        <span class="switch-label"></span>#}
+{#                        <span class="switch-handle" style="background: #393939;"></span>#}
+{#                    </label>#}
+                    <div class="switch-button">
+                        <!-- Checkbox -->
+                        <input type="checkbox" name="switch-button" id="switch-label" class="switch-button__checkbox">
+                        <!-- Botón -->
+                        <label for="switch-label" class="switch-button__label"></label>
                     </div>
                 </form>
 
@@ -378,9 +363,7 @@
                             </a>
                         </div>
                     </li>
-
                 </ul>
-
             </nav>
             <!-- End of Topbar -->
             <!-- Begin Page Content -->
@@ -405,13 +388,13 @@
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
                                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                    Ventas
-                                                    (Mensual)
+                                                    Numero
+                                                    (Cursos)
                                                 </div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">40,000</div>
                                             </div>
                                             <div class="col-auto">
-                                                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                                <i class="fab fa-accusoft fa-2x text-gray-300"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -425,13 +408,13 @@
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
                                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                    Compras
-                                                    (Mensual)
+                                                    Numero
+                                                    (Estudiantes)
                                                 </div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">215,000</div>
                                             </div>
                                             <div class="col-auto">
-                                                <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                                <i class="fas fa-house-user fa-2x text-gray-300"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -476,88 +459,14 @@
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
                                                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                    Productos
+                                                    Estudiantes
                                                     Cantidad
                                                 </div>
                                                 <div class="h5 mb-0 font-weight-bold text-gray-800">1800</div>
                                             </div>
                                             <div class="col-auto">
-                                                <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                                <i class="fas fa-house-user fa-2x text-gray-300"></i>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Content Row -->
-                        <div class="row">
-
-                            <!-- Area Chart -->
-                            <div class="col-xl-8 col-lg-7">
-                                <div class="card shadow mb-4">
-                                    <!-- Card Header - Dropdown -->
-                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                        <h6 class="m-0 font-weight-bold text-primary">Resumen de ganancias</h6>
-                                        <div class="dropdown no-arrow">
-                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                 aria-labelledby="dropdownMenuLink">
-                                                <div class="dropdown-header">Dropdown Header:</div>
-                                                <a class="dropdown-item" href="#">Action</a>
-                                                <a class="dropdown-item" href="#">Another action</a>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="#">Something else here</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Card Body -->
-                                    <div class="card-body">
-                                        <div class="chart-area">
-                                            <canvas id="myAreaChart"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Pie Chart -->
-                            <div class="col-xl-4 col-lg-5">
-                                <div class="card shadow mb-4">
-                                    <!-- Card Header - Dropdown -->
-                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                        <h6 class="m-0 font-weight-bold text-primary">Fuentes de ingresos</h6>
-                                        <div class="dropdown no-arrow">
-                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                 aria-labelledby="dropdownMenuLink">
-                                                <div class="dropdown-header">Dropdown Header:</div>
-                                                <a class="dropdown-item" href="#">Action</a>
-                                                <a class="dropdown-item" href="#">Another action</a>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="#">Something else here</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Card Body -->
-                                    <div class="card-body">
-                                        <div class="chart-pie pt-4 pb-2">
-                                            <canvas id="myPieChart"></canvas>
-                                        </div>
-                                        <div class="mt-4 text-center small">
-                                        <span class="mr-2">
-                                          <i class="fas fa-circle text-primary"></i> Direct
-                                        </span>
-                                            <span class="mr-2">
-                                          <i class="fas fa-circle text-success"></i> Social
-                                        </span>
-                                            <span class="mr-2">
-                                          <i class="fas fa-circle text-info"></i> Referral
-                                        </span>
                                         </div>
                                     </div>
                                 </div>
@@ -761,13 +670,6 @@
 
 <!-- Custom scripts for all pages-->
 <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
-
-<!-- Page level plugins-->
-<script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
-
-<!-- Page level custom scripts-->
-<script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
-<script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
 <!--
 <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 -->
@@ -794,10 +696,7 @@
 {#<script src="https://code.jquery.com/jquery-3.5.1.js"></script>#}
 <script src="{% static 'js/datatables.fixed.header.min.js' %}"></script>
 <!--columnas y filas estaticas con table-->
-<script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
-<script src="{% static 'js/demo/chart-bar-demo.js' %}"></script>
-<script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
-<script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+<script src="{% static 'js/change_color.js' %}"></script>
 <script type="text/javascript">
 
 </script>

@@ -1,46 +1,34 @@
-{% if employee_set %}
+{% if course_set %}
     <div class="card border-danger">
         <div class="card-header" style="background-color: rgb(167,31,31);">
-            <h6 class="card-title text-center text-white mb-0" style="font-size: 13px;">Lista de trabajadores de la
-                empresa</h6>
+            <h6 class="card-title text-center text-white mb-0" style="font-size: 13px;">Listado de cursos</h6>
         </div>
         <div class="card-body pb-1">
             <div class="table-responsive small dataTables_wrapper">
-                <table id="table-employee-list"
+                <table id="table-course-list"
                        class="table   align-content-center table-bordered response"
                        cellspacing="0" width="100%" style="border-collapse:collapse;">
                     <thead>
                     <tr class="text-center  text-white"
                         style="background-color: rgba(167,31,31, 1.0);">
                         <th class="th-sm font-weight-normal">N°</th>
-                        <th class="th-sm font-weight-normal">Documento</th>
-                        <th class="th-sm font-weight-normal">Nombres y apellidos</th>
-                        <th class="th-sm font-weight-normal">Fecha nacimiento</th>
-                        <th class="th-sm font-weight-normal">Telefono</th>
-                        <th class="th-sm font-weight-normal">Correo</th>
-                        <th class="th-sm font-weight-normal">Dirección</th>
-                        <th class="th-sm font-weight-normal">Tipo</th>
-                        <th class="th-sm font-weight-normal">Empresa</th>
-                        <th class="th-sm font-weight-normal">Foto</th>
+                        <th class="th-sm font-weight-normal">Codigo</th>
+                        <th class="th-sm font-weight-normal">Nombre Curso</th>
+                        <th class="th-sm font-weight-normal">Descripcion</th>
+                        <th class="th-sm font-weight-normal">Fecha</th>
+                        <th class="th-sm font-weight-normal">Estado</th>
                         <th class="th-sm font-weight-normal">Acción</th>
                     </tr>
                     </thead>
                     <tbody style="font-size: 12px;">
-                    {% for e in employee_set %}
+                    {% for c in course_set %}
                         <tr class="text-center">
-                            <td class="align-middle"><strong>{{ e.id }}</strong></td>
-                            <td class="align-middle">{{ e.document }}</td>
-                            <td class="align-middle">{{ e.full_name }}</td>
-                            <td class="align-middle">{{ e.birth_date }}</td>
-                            <td class="align-middle">{{ e.telephone }}</td>
-                            <td class="align-middle">{{ e.email }}</td>
-                            <td class="align-middle">{{ e.address }}</td>
-                            <td class="align-middle">{{ e.get_type_display }}</td>
-                            <td class="align-middle">{{ e.business.business_name }}</td>
-                            <td class="align-middle">
-                                <img class="img-thumbnail" src="{{ e.photo.url }}" id="img-photo-employee" width="100px"
-                                     height="80px">
-                            </td>
+                            <td class="align-middle"><strong>{{ c.id }}</strong></td>
+                            <td class="align-middle">{{ c.code }}</td>
+                            <td class="align-middle">{{ c.name }}</td>
+                            <td class="align-middle">{{ c.description }}</td>
+                            <td class="align-middle">{{ c.create_at }}</td>
+                            <td class="align-middle">{{ c.is_state }}</td>
                             <td class="p-1 align-middle">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-success  dropdown-toggle"
@@ -50,8 +38,8 @@
                                     </button>
                                     <div class="dropdown-menu border-info font-italic">
                                         <a class="dropdown-item btn-update-person"
-                                           style="cursor: pointer; font-size: 11px;" pk="{{ e.id }}"><i
-                                                class="fas fa-edit pr-1"></i> Modificar datos </a>
+                                           style="cursor: pointer; font-size: 11px;" pk="{{ c.id }}"><i
+                                                class="fas fa-edit pr-1"></i> Modificar curso </a>
 {#                                        {% if e.user %}#}
 {#                                            <a class="dropdown-item btn-update-user"#}
 {#                                               style="cursor: pointer; font-size: 11px;"#}
@@ -73,15 +61,11 @@
                     <tfoot>
                     <tr class="text-center text-white" style="background-color: rgba(141,20,20, 1.0);">
                         <th class="th-sm font-weight-normal">N°</th>
-                        <th class="th-sm font-weight-normal">Documento</th>
-                        <th class="th-sm font-weight-normal">Nombres y apellidos</th>
-                        <th class="th-sm font-weight-normal">Fecha nacimiento</th>
-                        <th class="th-sm font-weight-normal">Telefono</th>
-                        <th class="th-sm font-weight-normal">Correo</th>
-                        <th class="th-sm font-weight-normal">Dirección</th>
-                        <th class="th-sm font-weight-normal">Tipo</th>
-                        <th class="th-sm font-weight-normal">Empresa</th>
-                        <th class="th-sm font-weight-normal">Foto</th>
+                        <th class="th-sm font-weight-normal">Codigo</th>
+                        <th class="th-sm font-weight-normal">Nombre Curso</th>
+                        <th class="th-sm font-weight-normal">Descripcion</th>
+                        <th class="th-sm font-weight-normal">Fecha</th>
+                        <th class="th-sm font-weight-normal">Estado</th>
                         <th class="th-sm font-weight-normal">Acción</th>
                     </tr>
                     </tfoot>
@@ -89,12 +73,6 @@
             </div>
         </div>
     </div>
-    <style>
-        #img-photo-employee {
-            border-radius: 50%;
-            vertical-align: middle;
-        }
-    </style>
 {% else %}
-    <h6>No existen registros de trabajadores</h6>
+    <h6>No existen cursos registrados</h6>
 {% endif %}

@@ -1,32 +1,32 @@
 {% extends 'index.html' %}
 
 {% block title %}
-    System | Trabajador
+    Jcarrillo | Personal
 {% endblock title %}
 
 {% block body %}
 
     <div class="card-header p-1 m-0 small roboto-medium">
         <button type="button" onclick="showModalView('get_employee_form')"
-                class="btn btn-outline-success" style="font-size: 12px;"><i class="fas fa-database"></i> Nuevo empleado
+                class="btn btn-outline-danger" style="font-size: 13px;"><i class="fas fa-database"></i> Nuevo usuario
         </button>
     </div>
     <div class="container-fluid montserrat p-0 pb-4 roboto-medium">
-        <div id="employee-grid-list" class="small" style="overflow-y: scroll; height: 500px; width: auto;">{% include "certification/employee_grid_list.html" %}</div>
+        <div id="employee-grid-list" class="small h-100">{% include "certification/employee_grid_list.html" %}</div>
     </div>
     <!-- Content -->
     <div class="container-fluid roboto-medium">
         <div class="table-responsive bg-info" id="table-fuel_list"></div>
     </div>
-    <div class="modal fade roboto-medium" id="modal-employee-form" tabindex="-1" role="dialog" aria-labelledby="ModalHelpTitle"
+    <div class="modal fade roboto-medium" id="modal-person-form" tabindex="-1" role="dialog"
+         aria-labelledby="ModalHelpTitle"
          aria-hidden="true"></div>
-
 {% endblock body %}
 
 {% block extrajs %}
 
     <script type="text/javascript">
-        $('#table-person-list').DataTable({
+        $('#table-employee-list').DataTable({
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
             },
@@ -38,7 +38,7 @@
 
         function showModalView(route) {
             $.ajax({
-                url: '/hrm/' + route + '/',
+                url: '/certification/' + route + '/',
                 dataType: 'json',
                 type: 'GET',
                 data: {'pk': 1},
@@ -55,7 +55,7 @@
         $(document).on('click', '.btn-assignment-subsidiary', function () {
             let search = $(this).attr('pk');
             $.ajax({
-                url: '/hrm/get_employee_by_id/',
+                url: '/certification/get_employee_by_id/',
                 dataType: 'json',
                 type: 'GET',
                 data: {'pk': search},
@@ -74,7 +74,7 @@
         $(document).on('click', '.btn-create-user', function () {
             let search = $(this).attr('pk');
             $.ajax({
-                url: '/hrm/get_create_user/',
+                url: '/certification/get_create_user/',
                 dataType: 'json',
                 type: 'GET',
                 data: {'pk': search},
@@ -94,7 +94,7 @@
         $(document).on('click', '.btn-update-user', function () {
             let search = $(this).attr('pk');
             $.ajax({
-                url: '/hrm/get_update_user/',
+                url: '/certification/get_update_user/',
                 dataType: 'json',
                 type: 'GET',
                 data: {'pk': search},
@@ -113,7 +113,7 @@
         $(document).on('click', '.btn-update-person', function () {
             let search = $(this).attr('pk');
             $.ajax({
-                url: '/hrm/get_employee_update_form/',
+                url: '/certification/get_employee_update_form/',
                 dataType: 'json',
                 type: 'GET',
                 data: {'pk': search},
