@@ -69,6 +69,7 @@ class Course(models.Model):
 
 
 class Programming(models.Model):
+    STATE_CHOICES = (('P', 'Programado'), ('F', 'Finalizado'), ('A', 'Anulado'))
     id = models.AutoField(primary_key=True)
     course = models.ForeignKey('Course', on_delete=models.CASCADE, null=True, blank=True)
     person = models.ForeignKey('Person', on_delete=models.CASCADE, null=True, blank=True)
@@ -76,12 +77,13 @@ class Programming(models.Model):
     end_date = models.DateField('Fecha de nacimiento', null=True, blank=True)
     course_price = models.DecimalField('Precio del curso', max_digits=10, decimal_places=2, default=0)
     vacancies = models.IntegerField('Cantidad', default=0)
-    hours = models.TimeField('Horas', null=True, blank=True, default=0)
+    hours = models.IntegerField('Horas', default=0)
     observation = models.CharField(max_length=200, null=True, blank=True)
-    is_state = models.BooleanField('Estado', default=False)
+    state = models.CharField('Estado', max_length=1, choices=STATE_CHOICES, default='P')
+    create_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.course.name)
 
     class Meta:
         verbose_name = 'Programacion'

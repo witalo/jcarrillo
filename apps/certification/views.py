@@ -1,3 +1,4 @@
+import decimal
 from datetime import datetime
 from http import HTTPStatus
 from django.contrib.auth.models import User
@@ -6,7 +7,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.template import loader
-from apps.certification.models import Person, Business, Course
+from apps.certification.models import Person, Business, Course, Programming
 
 
 class Home(TemplateView):
@@ -239,3 +240,154 @@ def get_course_form(request):
         return JsonResponse({
             'form': t.render(c, request),
         })
+
+
+@csrf_exempt
+def save_course(request):
+    if request.method == 'POST':
+        _code = request.POST.get('id-code', '')
+        _name = request.POST.get('id-name', '')
+        _description = request.POST.get('id-description', '')
+        _state = bool(request.POST.get('checkbox', ''))
+
+        course_obj = Course(
+            code=_code,
+            name=_name,
+            description=_description,
+            is_state=_state,
+        )
+        course_obj.save()
+        return JsonResponse({
+            'message': True,
+        }, status=HTTPStatus.OK)
+
+
+@csrf_exempt
+def update_course(request):
+    if request.method == 'POST':
+        pk = request.POST.get('id-pk', '')
+        course_obj = Course.objects.get(id=int(pk))
+        _code = request.POST.get('id-code', '')
+        _name = request.POST.get('id-name', '')
+        _description = request.POST.get('id-description', '')
+        _state = bool(request.POST.get('checkbox', ''))
+        course_obj.code = _code
+        course_obj.name = _name
+        course_obj.description = _description
+        course_obj.is_state = _state
+        course_obj.save()
+        return JsonResponse({
+            'success': True,
+        }, status=HTTPStatus.OK)
+
+
+def get_course_update_form(request):
+    if request.method == 'GET':
+        id_pk = int(request.GET.get('pk', ''))
+        course_obj = Course.objects.get(id=id_pk)
+        t = loader.get_template('certification/update_course_form.html')
+        c = ({
+            'course_obj': course_obj,
+        })
+        return JsonResponse({
+            'success': True,
+            'form': t.render(c, request),
+        })
+
+
+def get_programming_list(request):
+    if request.method == 'GET':
+        course_set = Course.objects.all()
+        my_date = datetime.now()
+        date_now = my_date.strftime("%Y-%m-%d")
+        return render(request, 'certification/programming_list.html', {
+            'course_set': course_set,
+            'date_now': date_now,
+        })
+
+
+def get_programming_form(request):
+    if request.method == 'GET':
+        my_date = datetime.now()
+        date_now = my_date.strftime("%Y-%m-%d")
+        time_now = my_date.strftime("%H:%m")
+        course_set = Course.objects.all()
+        person_set = Person.objects.filter(type='2', is_state=True)
+        t = loader.get_template('certification/register_programming.html')
+        c = ({
+            'person_set': person_set,
+            'course_set': course_set,
+            'date_now': date_now,
+            'time_now': time_now,
+            'state': Programming._meta.get_field('state').choices,
+        })
+        return JsonResponse({
+            'success': True,
+            'form': t.render(c, request),
+        })
+
+
+@csrf_exempt
+def save_programming(request):
+    if request.method == 'POST':
+        _course_pk = request.POST.get('id-course-reg', '')
+        course_obj = Course.objects.get(id=int(_course_pk))
+        _person_pk = request.POST.get('id-person-reg', '')
+        person_obj = Person.objects.get(id=int(_person_pk))
+        _date_start = request.POST.get('id-start-date', '')
+        _date_end = request.POST.get('id-end-date', '')
+        _hour = int(request.POST.get('id-hour', ''))
+        _price = decimal.Decimal(request.POST.get('id-price', ''))
+        _quantity = int(request.POST.get('id-quantity', ''))
+        _observation = request.POST.get('id-observation', '')
+        _state = request.POST.get('id-state', '')
+
+        programming_obj = Programming(
+            course=course_obj,
+            person=person_obj,
+            start_date=_date_start,
+            end_date=_date_end,
+            course_price=_price,
+            vacancies=_quantity,
+            hours=_hour,
+            observation=_observation,
+            state=_state,
+        )
+        programming_obj.save()
+        return JsonResponse({
+            'message': True,
+        }, status=HTTPStatus.OK)
+
+
+def get_programming_grid_list(request):
+    if request.method == 'GET':
+        start_date = request.GET.get('start-date', '')
+        end_date = request.GET.get('end-date', '')
+        programming_set = Programming.objects.filter(create_at__date__range=(start_date, end_date))
+        tpl = loader.get_template('certification/programming_grid_list.html')
+        context = ({
+            'programming_set': programming_set,
+        })
+        return JsonResponse({
+            'success': True,
+            'grid': tpl.render(context),
+        }, status=HTTPStatus.OK)
+
+
+def get_programming_grid_list_by_course(request):
+    if request.method == 'GET':
+        pk = request.GET.get('course_pk', '')
+        course_obj = Course.objects.get(id=int(pk))
+        try:
+            programming_set = Programming.objects.filter(course=course_obj)
+        except Programming.DoesNotExist:
+            programming_set = {}
+
+        tpl = loader.get_template('certification/programming_grid_list.html')
+        context = ({
+            'programming_set': programming_set,
+        })
+        return JsonResponse({
+            'success': True,
+            'grid': tpl.render(context),
+        }, status=HTTPStatus.OK)

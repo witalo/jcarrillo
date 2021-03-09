@@ -17,10 +17,6 @@
           rel="stylesheet">
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
-    <!-- <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
-     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-     <link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css" rel="stylesheet">-->
-    <!--mensajes toast-->
     <link href="{% static 'css/message.toastr.css' %}" rel="stylesheet">
     <!--data table-->
     <link href="{% static 'css/bootstrap_data_table.css' %}" rel="stylesheet">
@@ -35,7 +31,6 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <!-- jQuery Custom Content Scroller V3.1.5 -->
     <link rel="stylesheet" href="{% static 'css/jquery.mCustomScrollbar.css' %}">
-    {#    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">#}
     <link rel="stylesheet" href="{% static 'css/fixe.header_data_tables.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/switch.css' %}">
 </head>
@@ -45,9 +40,9 @@
 <div id="wrapper" class="roboto-medium">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav sidebar sidebar-dark accordion toggled" id="accordionSidebar"
+    <ul class="navbar-nav sidebar sidebar-dark accordion " id="accordionSidebar"
         style="background-color: rgb(157,29,29);">
-
+{#toggled --> cambia a expandido el menu y va en la clase#}
         <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center">
             <!-- Sidebar Toggler (Sidebar) -->
@@ -80,13 +75,13 @@
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                aria-expanded="true" aria-controls="collapseTwo">
                 <i class="fas fa-house-user"></i>
-                <span>Personal</span>
+                <span>Usuarios</span>
             </a>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h5 class="collapse-header">Certificado - Digital</h5>
                     <a class="collapse-item" href="{% url 'certification:employee_list' %}"><i
-                            class="fas fa-house-user"></i> Trabajador</a>
+                            class="fas fa-house-user"></i> Usuarios</a>
                     {#                    <a class="collapse-item" href="{% url 'purchase:order_purchase' %}"><i#}
                     {#                            class="fas fa-cart-plus fa-x text-gray-300"></i> Compras</a>#}
                     {#                    <a class="collapse-item" href="{% url 'sale:order_sales_list' %}"><i#}
@@ -133,7 +128,7 @@
             <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Programacion</h6>
-                    <a class="collapse-item" href="#"><i class="fab fa-accusoft"></i> Programacion</a>
+                    <a class="collapse-item" href="{% url 'certification:programming_list' %}"><i class="fab fa-accusoft"></i> Programacion</a>
                 </div>
             </div>
         </li>
@@ -623,7 +618,7 @@
             <footer class="sticky-footer bg-gradient-light p-2">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Software 2020</span>
+                        <span>Copyright &copy; 4soluciones 2021</span>
                     </div>
                 </div>
             </footer>
@@ -681,7 +676,7 @@
 <script src="{% static 'js/jquery.datatables.min.js' %}"></script>
 <script src="{% static 'js/datatables.bootstrap4.min.js' %}"></script>
 <!--mensaje toast-->
-<script src="{% static 'js/message.toast.js' %}"></script>
+<script src="{% static 'js/toastr.js' %}"></script>
 <!--select combo busqueda-->
 <script src="{% static 'js/select2.min.js' %}"></script>
 <!--mensajes-->

@@ -53,12 +53,11 @@
         $(document).on('click', '.btn-update-course', function () {
             let search = $(this).attr('pk');
             $.ajax({
-                url: '/certification/get_employee_update_form/',
+                url: '/certification/get_course_update_form/',
                 dataType: 'json',
                 type: 'GET',
                 data: {'pk': search},
                 success: function (response) {
-                    console.log(response);
                     if (response.success) {
                         $('#modal-course-form').html(response.form);
                         $('#modal-course-form').modal('show');

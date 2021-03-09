@@ -1,0 +1,142 @@
+{% extends 'index.html' %}
+
+{% block title %}
+    Programacion | jcarrillo
+{% endblock title %}
+
+{% block body %}
+
+    <div class="card-header p-1 m-0 small roboto-medium row">
+        <div class="col-sm-2 align-self-center text-center">
+            <button type="button" onclick="showModalView('programming_form')"
+                    class="btn btn-sm btn-outline-primary" style="font-size: 13px;"><i class="fas fa-database"></i>
+                Nueva
+                programacion
+            </button>
+        </div>
+        <div class="col-sm-2 align-self-center">
+            <select class="form-control form-control-sm" id="id-course-pro" name="course-pro">
+                <option disabled selected value="0">Seleccione curso</option>
+                {% for c in course_set %}
+                    <option value="{{ c.id }}">
+                        {{ c.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-sm-2 align-self-center text-left">
+
+        </div>
+        <div class="col-sm-2 align-self-center text-center border-left-primary">
+            <input type="date" class="form-control form-control-sm" id="start-date"
+                   name="start-date"
+                   value="{{ date_now }}">
+        </div>
+        <div class="col-sm-2 align-self-center text-center">
+            <input type="date" class="form-control form-control-sm" id="end-date"
+                   name="end-date"
+                   value="{{ date_now }}">
+        </div>
+        <div class="col-sm-2 align-self-center text-left p-0">
+            <button type="button" onclick="View_programming_list()"
+                    class="btn btn-sm btn-outline-danger"><i class="fas fa-search-plus"></i> Mostrar programaciones
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid montserrat p-0 pb-4">
+        <div id="programming-grid-list"
+             class="small h-100"></div>
+    </div>
+    <div class="modal fade roboto-medium" id="modal-programming-form" tabindex="-1" role="dialog"
+         aria-labelledby="ModalHelpTitle"
+         aria-hidden="true"></div>
+{% endblock body %}
+
+{% block extrajs %}
+
+    <script type="text/javascript">
+
+        $('#id-course-pro').select2({
+            theme: 'bootstrap4',
+        });
+
+        function showModalView(route) {
+            $.ajax({
+                url: '/certification/' + route + '/',
+                dataType: 'json',
+                type: 'GET',
+                data: {},
+                success: function (response) {
+                    $('#modal-programming-form').html(response.form);
+                    $('#modal-programming-form').modal('show');
+                },
+                fail: function (response) {
+                    toastr.error('Problemas al abrir el formulario', '¡Mensaje!');
+                }
+            });
+        };
+
+        function View_programming_list() {
+            if ($('#start-date').val() === '' && $('#end-date').val() === '') {
+                toastr.warning('Seleccione correvtamente las fechas', 'Mensaje')
+                return false;
+            }
+            $.ajax({
+                url: '/certification/programming_grid_list/',
+                async: true,
+                dataType: 'json',
+                type: 'GET',
+                data: {
+                    'start-date': $('#start-date').val(),
+                    'end-date': $('#end-date').val(),
+                },
+                success: function (response) {
+                    $('#programming-grid-list').html(response['grid']);
+                },
+            });
+        };
+        $("#id-course-pro").change(function () {
+
+            if ($("#id-course-pro").val() === '0' || $("#id-course-pro").val() === '') {
+                toastr.warning('Seleccione el curso correctamente', 'Mensaje');
+                return false;
+            }
+            $.ajax({
+                url: '/certification/programming_grid_list_by_course/',
+                async: true,
+                dataType: 'json',
+                type: 'GET',
+                data: {'course_pk': $("#id-course-pro").val()},
+                contentType: 'application/json;charset=UTF-8',
+                headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                success: function (response) {
+                    if (response.success) {
+                        $('#programming-grid-list').html(response['grid']);
+                    }
+                },
+                error: function (response) {
+                    toastr.error('No existe programaciones con el curso', 'Mensaje');
+                }
+            });
+
+         });
+        $(document).on('click', '.btn-update-programming', function () {
+            let search = $(this).attr('pk');
+            $.ajax({
+                url: '/certification/get_course_update_form/',
+                dataType: 'json',
+                type: 'GET',
+                data: {'pk': search},
+                success: function (response) {
+                    if (response.success) {
+                        $('#modal-programming-form').html(response.form);
+                        $('#modal-programming-form').modal('show');
+                    }
+                },
+                fail: function (response) {
+                    toastr.error('Problemas al mostrar formulario', '¡Mensaje!');
+                }
+            });
+        });
+    </script>
+{% endblock extrajs %}

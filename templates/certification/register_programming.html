@@ -1,0 +1,149 @@
+<div class="modal-dialog modal-dialog-centered modal-lg montserrat" role="document">
+
+    <div class="modal-content">
+
+        <div class="modal-header" style="background-color: rgb(190,35,35);">
+            <h5 class="modal-title  text-white" style="font-size: 14px;">REGISTRO DE PROGRAMACIONES</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <form id="form-programming-save" class="embed-responsive" enctype="multipart/form-data"
+              action="{% url 'certification:save_programming' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="modal-body">
+                <div class="card border-danger">
+                    <div class="card-header" style="background-color: rgb(190,45,20);">
+                        <h6 class="card-title text-center text-white mb-0" style="font-size: 14px;">INGRESE DATOS DE LA
+                            PROGRAMACION</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row col-sm-12 col-md-12 col-lg-12 m-0 mt-2">
+                            <div class="col-sm-4 col-md-4 col-lg-4 align-self-center">
+                                <label class="mb-0">Curso</label>
+                                <select class="form-control" id="id-course-reg" name="id-course-reg"
+                                        style="font-size: 13px;"
+                                        required>
+                                    <option disabled selected value="0">Seleccione</option>
+                                    {% for c in course_set %}
+                                        <option value="{{ c.id }}">
+                                            {{ c.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-8 col-md-8 col-lg-8 align-self-center">
+                                <label class="mb-0">Docente</label>
+                                <select class="form-control" id="id-person-reg" name="id-person-reg"
+                                        style="font-size: 13px;"
+                                        required>
+                                    <option disabled selected value="0">Seleccione</option>
+                                    {% for p in person_set %}
+                                        <option value="{{ p.id }}">
+                                            {{ p.full_name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row col-sm-12 col-md-12 col-lg-12 m-0 mt-2">
+                            <div class="col-sm-4 col-md-4 col-lg-4 align-self-center">
+                                <label class="mb-0">Fecha inicio</label>
+                                <input type="date" class="form-control" id="id-start-date"
+                                       name="id-start-date"
+                                       value="{{ date_now }}" style="font-size: 12px;" required>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-4 align-self-center">
+                                <label class="mb-0">Fecha finalizacion</label>
+                                <input type="date" class="form-control" id="id-end-date"
+                                       name="id-end-date"
+                                       value="{{ date_now }}" style="font-size: 12px;" required>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-4 align-self-center">
+                                <label class="mb-0">Horas academicas</label>
+                                <input type="number" class="form-control" id="id-hour"
+                                       name="id-hour"
+                                       value="" style="font-size: 12px;" required>
+                            </div>
+                        </div>
+                        <div class="row col-sm-12 col-md-12 col-lg-12 m-0 mt-2">
+                            <div class="col-sm-4 col-md-4 col-lg-4 align-self-center">
+                                <label class="mb-0">Costo del curso</label>
+                                <input type="text" class="form-control" id="id-price"
+                                       name="id-price"
+                                       value="" style="font-size: 12px;" required>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-4 align-self-center">
+                                <label class="mb-0">Cantidad maxima</label>
+                                <input type="number" class="form-control" id="id-quantity"
+                                       name="id-quantity"
+                                       value="" style="font-size: 12px;" required>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-4 align-self-center">
+                                <label class="mb-0">Estado</label>
+                                <select class="form-control" id="id-state" name="id-state"
+                                        style="font-size: 13px;"
+                                        required>
+                                    <option disabled selected value="0">Seleccione</option>
+                                    {% for s in state %}
+                                        <option value="{{ s.0 }}">
+                                            {{ s.1 }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row col-sm-12 col-md-12 col-lg-12 m-0 mt-2">
+                            <div class="col-sm-12 col-md-12 col-lg-12 align-self-center">
+                                <label class="mb-0">Observaciones</label>
+                                <textarea type="text" maxlength="200" class="form-control" id="id-observation"
+                                          name="id-observation"
+                                          value="" style="font-size: 12px;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- modal-body -->
+            <div class="modal-footer p-1">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cerrar</button>
+                &nbsp;
+                <button id="save-programming" type="submit" class="btn btn-success btn-sm">Registrar programacion
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#id-person-reg').select2({
+        theme: 'bootstrap4',
+    });
+    $('#id-course-reg').select2({
+        theme: 'bootstrap4',
+    });
+    $('#form-programming-save').submit(function (event) {
+        event.preventDefault();
+        let data = new FormData($('#form-programming-save').get(0));
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: data,
+            cache: false,
+            processData: false,
+            contentType: false,
+            headers: {"X-CSRFToken": '{{ csrf_token }}'},
+            success: function (response) {
+                if (response.message) {
+                    toastr.success('Programacion registrado correctamente', 'Mensaje');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 400);
+                }
+            },
+            error: function (response) {
+                toastr.error('¡Problemas al registrar datos!', 'Mensaje');
+            }
+        });
+    });
+</script>
