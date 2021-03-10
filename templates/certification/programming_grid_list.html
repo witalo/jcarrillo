@@ -46,22 +46,13 @@
                                             style="font-size: 11px;">
                                         Acción
                                     </button>
-                                    <div class="dropdown-menu border-info font-italic">
-                                        <a class="dropdown-item btn-update-course"
+                                    <div class="dropdown-menu border-primary">
+                                        <a class="dropdown-item btn-update-programming"
                                            style="cursor: pointer; font-size: 11px;" pk="{{ c.id }}"><i
                                                 class="fas fa-edit pr-1"></i> Modificar Programacion </a>
-{#                                        {% if e.user %}#}
-{#                                            <a class="dropdown-item btn-update-user"#}
-{#                                               style="cursor: pointer; font-size: 11px;"#}
-{#                                               pk="{{ e.user.id }}">#}
-{#                                                <i class="fas fa-sync-alt"></i> Modificar usuario#}
-{#                                            </a>#}
-{#                                        {% else %}#}
-{#                                            <a class="dropdown-item btn-create-user"#}
-{#                                               style="cursor: pointer; font-size: 11px;" pk="{{ e.id }}">#}
-{#                                                <i class="fas fa-sync-alt"></i> Creacion de usuario#}
-{#                                            </a>#}
-{#                                        {% endif %}#}
+                                        <a class="dropdown-item  btn-inscription-programming"
+                                           style="cursor: pointer; font-size: 11px;" pk="{{ c.id }}"><i
+                                                class="fa fa-address-book pr-1"></i> Matriculas</a>
                                     </div>
                                 </div>
                             </td>

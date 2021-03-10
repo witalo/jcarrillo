@@ -1,0 +1,34 @@
+{% if programming_detail_set %}
+        <table class="table table-sm table-hover table-bordered" id="id-table-programming">
+            <thead class="text-white  rounded-top" style="background: #206fb5">
+            <tr class="text-center">
+                <th class="font-weight-normal">Nº</th>
+                <th class="font-weight-normal">Documento</th>
+                <th class="font-weight-normal">Estudiante</th>
+                <th class="font-weight-normal">Eliminar</th>
+            </tr>
+            </thead>
+            <tbody id="detail">
+            {% for d in programming_detail_set %}
+                <tr class="text-center" pd="{{ d.id }}" ip="{{ d.person.id }}">
+                    <td></td>
+                    <td>{{ d.person.document }}</td>
+                    <td class="text-left">{{ d.person.full_name }}</td>
+                    <td>
+                       <button type="button" pk="{{ d.id }}" onclick="deleteItem({{ d.id }})" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+{% else %}
+    <div class="row col-sm-12 col-md-12 col-lg-12  align-self-center m-0 p-0">
+        <span class="badge badge-light badge-pill col-sm-12 col-md-12 col-lg-12  text-center  align-self-center">
+            <h6>No se encontro estudiantes matriculados en el curso</h6>
+        </span>
+    </div>
+{% endif %}
+
+<script type="text/javascript">
+   counterStrike();
+</script>

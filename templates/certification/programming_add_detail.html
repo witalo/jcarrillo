@@ -1,0 +1,122 @@
+<div class="modal-dialog modal-dialog-centered modal-lg  montserrat" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title text-center">MATRICULAS DE ESTUDIANTES</h6>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form id="programming-detail-form" action="{% url 'certification:add_programming_detail' %}" method="POST"
+              enctype="multipart/form-data" class="embed-responsive">
+            {% csrf_token %}
+
+            <div class="modal-body">
+                <div class="card border-primary">
+                    <div class="card-header bg-danger text-white text-center align-self-center rounded-pill mt-2">
+                        {{ programming_obj.course.name }}
+                        <input type="hidden" id="id-programming_pk" name="id-programming_pk"
+                               class="form-control form-control-sm" value="{{ programming_obj.id }}">
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row col-sm-12 col-md-12 col-lg-12 m-0 p-0">
+                            <div class="col-sm-3 col-md-3 col-lg-3 text-center  align-self-center">Estudiante :</div>
+                            <div class="col-sm-5 col-md-5 col-lg-5 text-center  align-self-center">
+                                <select class="form-control form-control-sm" id="id-student" name="id-student" required>
+                                    <option value="0">Seleccione estudiante</option>
+                                    {% for p in person_set %}
+                                        <option value="{{ p.id }}">
+                                            {{ p.full_name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-4 text-center  align-self-center">
+                                <button type="submit" class="btn btn-sm btn-outline-primary"><i
+                                        class="fa fa-chevron-circle-down"></i> Matricular
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row col-sm-12 col-md-12 col-lg-12 m-2 p-0">
+                            <div class="col-sm-12 col-md-12 col-lg-12 mt-4" id="programming-detail-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#id-student').select2({
+        {#theme: 'bootstrap4',#}
+    });
+    $('#programming-detail-form').submit(function (event) {
+        event.preventDefault();
+        let student = $('#id-student').val();
+        if (student === '' || student === '0') {
+            toastr.warning('Por favor seleccione un estudiante', 'Mensaje');
+            return false;
+        }
+        if ($("#detail tr[ip=" + student + "]").length) {
+            toastr.warning('El estudiante ya se encuentra matriculado', 'Mensaje');
+            return false;
+        }
+        let data_ = new FormData($('#programming-detail-form').get(0));
+        $('#programming-detail-grid').empty();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: data_,
+            cache: false,
+            processData: false,
+            contentType: false,
+            headers: {"X-CSRFToken": '{{ csrf_token }}'},
+            success: function (response, textStatus, xhr) {
+                if (xhr.status == 200) {
+                    $('#programming-detail-grid').html(response.grid);
+                    toastr.success(response['message'], '¡Bien hecho!');
+                    $('#id-student').val('0');
+                }
+            },
+            error: function (jqXhr, textStatus, xhr) {
+                if (jqXhr.status == 500) {
+                    toastr.error(jqXhr.responseJSON.error, '¡Inconcebible!');
+                }
+            }
+        });
+    });
+
+    function counterStrike() {
+        var index = 1;
+        $('table#id-table-programming tbody#detail tr').each(function () {
+            $(this).attr('i', index);
+            $(this).children('td:first').text(index);
+            index++;
+        });
+    }
+
+    function deleteItem($student) {
+        $.ajax({
+            url: '/certification/delete_programming_detail/',
+            async: true,
+            dataType: 'json',
+            type: 'GET',
+            data: {'pk': $student},
+            contentType: 'application/json;charset=UTF-8',
+            headers: {"X-CSRFToken": '{{ csrf_token }}'},
+            success: function (response, textStatus, xhr) {
+                if (xhr.status == 200) {
+                    toastr.success(response.message, 'Mensaje');
+                    $('table#id-table-programming tbody#detail').find("tr[pd=" + $student + "]").remove();
+                    counterStrike();
+                }
+            },
+            fail: function (response) {
+                toastr.error("Problemas al remover la fila. ", 'Error');
+            }
+        });
+    }
+</script>

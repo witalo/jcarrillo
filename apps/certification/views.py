@@ -2,12 +2,13 @@ import decimal
 from datetime import datetime
 from http import HTTPStatus
 from django.contrib.auth.models import User
+from django.db import DatabaseError, IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.template import loader
-from apps.certification.models import Person, Business, Course, Programming
+from apps.certification.models import Person, Business, Course, Programming, DetailProgramming
 
 
 class Home(TemplateView):
@@ -390,4 +391,152 @@ def get_programming_grid_list_by_course(request):
         return JsonResponse({
             'success': True,
             'grid': tpl.render(context),
+        }, status=HTTPStatus.OK)
+
+
+def get_modal_programming_add(request):
+    if request.method == 'GET':
+        programming_pk = request.GET.get('pk', '')
+        programming_obj = Programming.objects.get(id=int(programming_pk))
+        person_set = Person.objects.filter(type='1', is_state=True)
+        t = loader.get_template('certification/programming_add_detail.html')
+        c = ({
+            'programming_obj': programming_obj,
+            'person_set': person_set
+        })
+        programming_detail_set = DetailProgramming.objects.filter(programing=programming_obj).order_by('id')
+        tpl2 = loader.get_template('certification/programming_detail_grid.html')
+        context2 = ({'programming_detail_set': programming_detail_set, })
+        return JsonResponse({
+            'success': True,
+            'form': t.render(c, request),
+            'grid': tpl2.render(context2),
+        }, status=HTTPStatus.OK)
+
+
+def get_programming_update_form(request):
+    if request.method == 'GET':
+        programming_pk = request.GET.get('pk', '')
+        programming_obj = Programming.objects.get(id=int(programming_pk))
+        my_date = datetime.now()
+        date_now = my_date.strftime("%Y-%m-%d")
+        course_set = Course.objects.all()
+        person_set = Person.objects.filter(type='2', is_state=True)
+        t = loader.get_template('certification/update_programming.html')
+        c = ({
+            'programming_obj': programming_obj,
+            'person_set': person_set,
+            'course_set': course_set,
+            'date_now': date_now,
+            'state': Programming._meta.get_field('state').choices,
+        })
+        return JsonResponse({
+            'success': True,
+            'form': t.render(c, request),
+        })
+
+
+@csrf_exempt
+def add_programming_detail(request):
+    data = {}
+    if request.method == 'POST':
+        programming_pk = request.POST.get('id-programming_pk', '')
+        person_pk = request.POST.get('id-student', '')
+        if programming_pk == '' or programming_pk == '0':
+            data['error'] = "Seleccione correctamente la programacion"
+            response = JsonResponse(data)
+            response.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+            return response
+        try:
+            programming_obj = Programming.objects.get(id=int(programming_pk))
+        except Programming.DoesNotExist:
+            data['error'] = "La programacion no existe"
+            response = JsonResponse(data)
+            response.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+            return response
+        if person_pk == '' or person_pk == '0':
+            data['error'] = "Seleccione correctamente el estudiante"
+            response = JsonResponse(data)
+            response.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+            return response
+        try:
+            person_obj = Person.objects.get(id=int(person_pk))
+        except Person.DoesNotExist:
+            data['error'] = "No existe el estudiante!"
+            response = JsonResponse(data)
+            response.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+            return response
+        try:
+            programming_detail_obj = DetailProgramming(
+                person=person_obj,
+                programing=programming_obj,
+                is_state=True,
+            )
+            programming_detail_obj.save()
+        except DatabaseError as e:
+            data['error'] = str(e)
+            response = JsonResponse(data)
+            response.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+            return response
+        except IntegrityError as e:
+            data['error'] = str(e)
+            response = JsonResponse(data)
+            response.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+            return response
+        programming_detail_set = DetailProgramming.objects.filter(programing=programming_obj).order_by('id')
+        t = loader.get_template('certification/programming_detail_grid.html')
+        c = ({
+            'programming_detail_set': programming_detail_set,
+        })
+        return JsonResponse({
+            'message': 'Estudiante Matriculado.',
+            'grid': t.render(c),
+        }, status=HTTPStatus.OK)
+
+
+def delete_programming_detail(request):
+    if request.method == 'GET':
+        pk = request.GET.get('pk', '')
+        if pk == '':
+            data = {'error': 'La fila no se selecciono correctamente'}
+            response = JsonResponse(data)
+            response.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+            return response
+        programming_detail_obj = DetailProgramming.objects.get(id=int(pk))
+        programming_detail_obj.delete()
+
+        return JsonResponse({
+            'message': 'Estudiante eliminado de la programacion',
+        }, status=HTTPStatus.OK)
+
+
+@csrf_exempt
+def update_programming(request):
+    if request.method == 'POST':
+        pk = request.POST.get('id-programming', '')
+        programming_obj = Programming.objects.get(id=int(pk))
+        _course_pk = request.POST.get('id-course-reg', '')
+        course_obj = Course.objects.get(id=int(_course_pk))
+        _person_pk = request.POST.get('id-person-reg', '')
+        person_obj = Person.objects.get(id=int(_person_pk))
+        _date_start = request.POST.get('id-start-date', '')
+        _date_end = request.POST.get('id-end-date', '')
+        _hour = int(request.POST.get('id-hour', ''))
+        _price = decimal.Decimal(request.POST.get('id-price', ''))
+        _quantity = int(request.POST.get('id-quantity', ''))
+        _observation = request.POST.get('id-observation', '')
+        _state = request.POST.get('id-state', '')
+
+        programming_obj.course = course_obj
+        programming_obj.person = person_obj
+        programming_obj.start_date = _date_start
+        programming_obj.end_date = _date_end
+        programming_obj.course_price = _price
+        programming_obj.vacancies = _quantity
+        programming_obj.hours = _hour
+        programming_obj.observation = _observation
+        programming_obj.state = _state
+        programming_obj.save()
+        return JsonResponse({
+            'message': True,
         }, status=HTTPStatus.OK)

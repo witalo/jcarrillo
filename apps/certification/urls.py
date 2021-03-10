@@ -23,4 +23,9 @@ urlpatterns = [
     path('programming_grid_list/', login_required(get_programming_grid_list), name='programming_grid_list'),
     path('programming_grid_list_by_course/', login_required(get_programming_grid_list_by_course),
          name='programming_grid_list_by_course'),
+    path('get_modal_programming_add/', login_required(get_modal_programming_add), name='get_modal_programming_add'),
+    path('add_programming_detail/', login_required(add_programming_detail), name='add_programming_detail'),
+    path('get_programming_update_form/', login_required(get_programming_update_form), name='get_programming_update_form'),
+    path('update_programming/', login_required(update_programming), name='update_programming'),
+    path('delete_programming_detail/', login_required(delete_programming_detail), name='delete_programming_detail'),
 ]

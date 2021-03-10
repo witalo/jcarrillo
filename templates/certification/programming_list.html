@@ -9,7 +9,7 @@
     <div class="card-header p-1 m-0 small roboto-medium row">
         <div class="col-sm-2 align-self-center text-center">
             <button type="button" onclick="showModalView('programming_form')"
-                    class="btn btn-sm btn-outline-primary" style="font-size: 13px;"><i class="fas fa-database"></i>
+                    class="btn btn-sm btn-outline-primary" style="font-size: 13px;"><i class="fa fa-graduation-cap"></i>
                 Nueva
                 programacion
             </button>
@@ -50,6 +50,13 @@
     <div class="modal fade roboto-medium" id="modal-programming-form" tabindex="-1" role="dialog"
          aria-labelledby="ModalHelpTitle"
          aria-hidden="true"></div>
+
+    <div class="modal fade roboto-medium" id="modal-programming-add" tabindex="-1" role="dialog"
+         aria-labelledby="ModalHelpTitle"
+         aria-hidden="true"></div>
+    <div class="modal fade roboto-medium" id="modal-programming-update" tabindex="-1" role="dialog"
+         aria-labelledby="ModalHelpTitle"
+         aria-hidden="true"></div>
 {% endblock body %}
 
 {% block extrajs %}
@@ -59,6 +66,7 @@
         $('#id-course-pro').select2({
             theme: 'bootstrap4',
         });
+
 
         function showModalView(route) {
             $.ajax({
@@ -119,18 +127,37 @@
                 }
             });
 
-         });
+        });
         $(document).on('click', '.btn-update-programming', function () {
             let search = $(this).attr('pk');
             $.ajax({
-                url: '/certification/get_course_update_form/',
+                url: '/certification/get_programming_update_form/',
                 dataType: 'json',
                 type: 'GET',
                 data: {'pk': search},
                 success: function (response) {
                     if (response.success) {
-                        $('#modal-programming-form').html(response.form);
-                        $('#modal-programming-form').modal('show');
+                        $('#modal-programming-update').html(response.form);
+                        $('#modal-programming-update').modal('show');
+                    }
+                },
+                fail: function (response) {
+                    toastr.error('Problemas al mostrar formulario', '¡Mensaje!');
+                }
+            });
+        });
+        $(document).on('click', '.btn-inscription-programming', function () {
+            let search = $(this).attr('pk');
+            $.ajax({
+                url: '/certification/get_modal_programming_add/',
+                dataType: 'json',
+                type: 'GET',
+                data: {'pk': search},
+                success: function (response) {
+                    if (response.success) {
+                        $('#modal-programming-add').html(response.form);
+                        $('#programming-detail-grid').html(response.grid);
+                        $('#modal-programming-add').modal('show');
                     }
                 },
                 fail: function (response) {
