@@ -51,7 +51,7 @@ def create_user(user=None, password=None, email=None):
                 response.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
                 return response
 
-            new_password = get_random_string(length=10, allowed_chars=password)
+            new_password = str(password[:2]) + get_random_string(length=4, allowed_chars=user[:4])
             user_obj = User(
                 username=user,
                 email=email,
