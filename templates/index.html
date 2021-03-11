@@ -132,6 +132,25 @@
                 </div>
             </div>
         </li>
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Certificados
+        </div>
+
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCertification"
+               aria-expanded="true" aria-controls="collapseCertification">
+                <i class="fas fa-fw fa-folder"></i>
+                <span>Certificados</span>
+            </a>
+            <div id="collapseCertification" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Certificado</h6>
+                    <a class="collapse-item" href="{% url 'certification:certification_list' %}"><i class="fab fa-accusoft"></i> Certificado</a>
+                </div>
+            </div>
+        </li>
         <hr class="sidebar-divider d-none d-md-block">
     </ul>
     <!-- End of Sidebar -->

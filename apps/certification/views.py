@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.template import loader
 from apps.certification.models import Person, Business, Course, Programming, DetailProgramming
+from apps.user.views import create_user
 
 
 class Home(TemplateView):
@@ -72,27 +73,29 @@ def save_person(request):
             _photo = request.FILES['customFile']
         except Exception as e:
             _photo = 'person/employee0.jpg'
-
-        person_obj = Person(
-            document=_document,
-            paternal_last_name=_paternal_last_name,
-            maternal_last_name=_maternal_last_name,
-            names=_names,
-            birth_date=_birth_date,
-            telephone=_telephone,
-            email=_email,
-            address=_address,
-            type=_occupation,
-            is_state=_state,
-            photo=_photo,
-            business=business_obj,
-            user=user_obj,
-        )
-        person_obj.save()
-        return JsonResponse({
-            'message': True,
-            'resp': 'Se registro exitosamente',
-        }, status=HTTPStatus.OK)
+        _user = create_user(_document, _paternal_last_name, _email)
+        if _user != 0:
+            person_obj = Person(
+                document=_document,
+                paternal_last_name=_paternal_last_name,
+                maternal_last_name=_maternal_last_name,
+                names=_names,
+                birth_date=_birth_date,
+                telephone=_telephone,
+                email=_email,
+                address=_address,
+                type=_occupation,
+                is_state=_state,
+                photo=_photo,
+                business=business_obj,
+                user=_user,
+            )
+            person_obj.save()
+            create_user()
+            return JsonResponse({
+                'message': True,
+                'resp': 'Se registro exitosamente',
+            }, status=HTTPStatus.OK)
 
 
 #
@@ -540,3 +543,17 @@ def update_programming(request):
         return JsonResponse({
             'message': True,
         }, status=HTTPStatus.OK)
+
+
+def get_certification_list(request):
+    if request.method == 'GET':
+        user_id = request.user.id
+        user_obj = User.objects.get(id=int(user_id))
+
+        # course_set = Course.objects.filter(programming__detailprogramming__person_id=int(pk))
+        my_date = datetime.now()
+        date_now = my_date.strftime("%Y-%m-%d")
+        return render(request, 'certification/programming_list.html', {
+            # 'course_set': course_set,
+            'date_now': date_now,
+        })

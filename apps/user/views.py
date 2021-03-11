@@ -9,6 +9,7 @@ from django.views.generic.edit import FormView
 from django.contrib.auth import login, logout
 from django.http import HttpResponseRedirect, JsonResponse
 from .forms import FormLogin
+from django.utils.crypto import get_random_string
 from ..certification.models import Person
 
 
@@ -37,20 +38,11 @@ def logout_user(request):
 
 # creacion de usuario
 @csrf_exempt
-def create_user(request):
-    if request.method == 'POST':
-        _id = int(request.POST.get('pk'))
-        employee_obj = Person.objects.get(id=_id)
-        _username = request.POST.get('username')
-        _password = request.POST.get('password')
-        _user_email = _username + '@system.com'
-        is_staff = False
-        if request.POST.get('is_staff') is not None:
-            is_staff = bool(request.POST.get('is_staff'))
-
-        if _username != '':
+def create_user(user=None, password=None, email=None):
+    if user and password and email is not None:
+        if user != '':
             try:
-                user_obj = User.objects.get(username=_username)
+                user_obj = User.objects.get(username=user)
             except User.DoesNotExist:
                 user_obj = None
 
@@ -59,19 +51,17 @@ def create_user(request):
                 response.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
                 return response
 
+            new_password = get_random_string(length=10, allowed_chars=password)
             user_obj = User(
-                username=_username,
-                email=_user_email,
+                username=user,
+                email=email,
             )
-            user_obj.set_password(_password)
-            user_obj.is_staff = is_staff
+            user_obj.set_password(new_password)
+            user_obj.is_staff = False
             user_obj.save()
-            if user_obj.id != '':
-                employee_obj.user = user_obj
-                employee_obj.save()
-            return JsonResponse({
-                'success': True,
-            }, status=HTTPStatus.OK)
+            return user_obj
+    else:
+        return 0
 
 
 # creacion de usuario
